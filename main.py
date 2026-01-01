@@ -60,10 +60,10 @@ async def get_legal_advice(request: AdviceRequest):
             advice=advice
         )
     except Exception as e:
-        logger.error(f"Error processing legal advice: {str(e)}")
         import traceback
-        logger.error(traceback.format_exc())
-        raise HTTPException(status_code=500, detail=str(e))
+        error_detail = f"{str(e)}\n{traceback.format_exc()}"
+        logger.error(f"Error processing legal advice: {error_detail}")
+        raise HTTPException(status_code=500, detail=error_detail)
 
 if __name__ == "__main__":
     # Use 8001 to avoid frequent port 8000 conflicts
