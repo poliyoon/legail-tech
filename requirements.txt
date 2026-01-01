@@ -3,6 +3,7 @@ uvicorn
 pydantic
 python-dotenv
 langchain
-langchain-openai
+langchain-google-genai
+google-generativeai
 langchain-community
 faiss-cpu

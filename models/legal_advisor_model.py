@@ -1,12 +1,12 @@
 """
 models/legal_advisor_model.py
 Manual RAG Implementation (Bypasses langchain.chains).
-Created: 2026-01-01T11:40:00+09:00
+Created: 2026-01-01T12:24:00+09:00
 """
 
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import ChatPromptTemplate
 from data.legal_docs import get_all_docs
@@ -15,15 +15,21 @@ load_dotenv()
 
 class LegalAdvisorModel:
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = os.getenv("GOOGLE_API_KEY")
         
-        # Initialize Embeddings (OpenAI for lightweight Vercel deployment)
-        self.embeddings = OpenAIEmbeddings(api_key=self.api_key)
+        if not self.api_key:
+            raise ValueError("GOOGLE_API_KEY is not set in environment variables.")
+
+        # Initialize Embeddings (Google for consistency with LLM)
+        self.embeddings = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001",
+            google_api_key=self.api_key
+        )
         
-        # Initialize LLM
-        self.llm = ChatOpenAI(
-            model="gpt-4o-mini",
-            api_key=self.api_key,
+        # Initialize LLM (Gemini 1.5 Flash)
+        self.llm = ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash",
+            google_api_key=self.api_key,
             temperature=0
         )
         
