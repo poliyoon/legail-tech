@@ -15,10 +15,11 @@ load_dotenv()
 
 class LegalAdvisorModel:
     def __init__(self):
-        self.api_key = os.getenv("GOOGLE_API_KEY")
+        # Look for both GOOGLE_API_KEY and GEMINI_API_KEY for better compatibility
+        self.api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
         
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY is not set in environment variables.")
+            raise ValueError("Neither GOOGLE_API_KEY nor GEMINI_API_KEY is set in environment variables.")
 
         # Initialize Embeddings (Google for consistency with LLM)
         self.embeddings = GoogleGenerativeAIEmbeddings(
